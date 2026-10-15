@@ -1,0 +1,8 @@
+build/
+*.root
+*.csv
+Input_Decks.zip
+tmp_*
+__pycache__/
+*.pyc
+.DS_Store

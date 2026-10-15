@@ -1,0 +1,6 @@
+/DetectorConstruction/Sample_Material S1
+/DetectorConstruction/Collimator2_Height 20.000000000
+/DetectorConstruction/update
+/gun/energy 60.000000 keV
+/analysis/setFileName hist_S1_H20_E60
+/run/beamOn 1000000

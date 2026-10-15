@@ -1,0 +1,5 @@
+python pivot_uncollided.py process_results.csv
+chmod +x run_all_isolated.sh
+./run_all_isolated.sh
+
+python gen_mac.py data.xlsx --outdir ./mac_output --beamon 100000000
