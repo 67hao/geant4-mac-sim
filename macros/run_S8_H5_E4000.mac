@@ -1,6 +1,0 @@
-/DetectorConstruction/Sample_Material S8
-/DetectorConstruction/Collimator2_Height 5.000000000
-/DetectorConstruction/update
-/gun/energy 4000.000000 keV
-/analysis/setFileName hist_S8_H5_E4000
-/run/beamOn 1000000

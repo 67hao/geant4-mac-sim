@@ -27,7 +27,7 @@ def parse_args():
     parser.add_argument("--runner-id", type=int, required=True, help="ID runner (1..10)")
     parser.add_argument("--num-runners", type=int, default=10, help="Tong so runner tren account nay")
     parser.add_argument("--primaries", type=int, default=1000000, help="So hat moi job")
-    parser.add_argument("--gdrive-folder", type=str, default="1LId-37VbNNFiQ1V2wjJE4uGyTYQxneqB")
+    parser.add_argument("--gdrive-folder", type=str, default="1ZvUozvCDo3itVIYcA0r-70CR92Ag8IRh")
     parser.add_argument("--plan-file", type=str, default="mac_g4_plan_18acc.json")
     parser.add_argument("--github-user", type=str, default=None)
     parser.add_argument("--sim-bin", type=str, default=None)
@@ -130,8 +130,8 @@ def main():
         jname = job["job_name"]
         macro_name = job["macro_file"]
         sample = job.get("sample", jname.split("_")[0])
-        height_mm = job.get("height_mm", 0.0)
-        energy_kev = job.get("energy_kev", 0.0)
+        thickness_cm = float(job.get("thickness_cm", 0.0))
+        energy_kev = float(job.get("energy_kev", 0.0))
         target_primaries = int(args.primaries or job.get("primaries", 1000000))
 
         # Check candidate filenames
@@ -172,7 +172,7 @@ def main():
             print(f"    ⚠️ Warning checking macro content: {e}")
 
         print(f"\n--- [{idx}/{total_jobs}] RUNNING: {jname} ({macro_name}) ---")
-        print(f"    Sample: {sample} | Collimator2 Height: {height_mm} mm | Energy: {energy_kev} keV | Primaries: {target_primaries:,}")
+        print(f"    Sample: {sample} | Thickness: {thickness_cm} cm | Energy: {energy_kev} keV | Primaries: {target_primaries:,}")
 
         # Set thread environment variable
         env = os.environ.copy()
@@ -235,7 +235,7 @@ def main():
         row = {
             "job_name": jname,
             "sample": sample,
-            "collimator2_height_mm": height_mm,
+            "thickness_cm": thickness_cm,
             "energy_kev": energy_kev,
             "primaries": events_simulated,
             "detplane_area_cm2": detplane_area,

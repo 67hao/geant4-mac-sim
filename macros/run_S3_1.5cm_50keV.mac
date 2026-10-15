@@ -1,0 +1,17 @@
+# Paper 10.1 Benchmark - S3 @ 50 keV, th=1.5 cm
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/DetectorConstruction/Sample_Material S3
+/DetectorConstruction/Sample_Thickness 1.5000 cm
+/DetectorConstruction/update
+
+/gun/particle gamma
+/gun/energy 50 keV
+/gun/position 0 0 0 cm
+/gun/direction 0 0 1
+
+/analysis/setFileName hist_S3_1.5cm_50keV
+/run/beamOn 1000000

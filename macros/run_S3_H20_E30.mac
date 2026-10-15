@@ -1,6 +1,0 @@
-/DetectorConstruction/Sample_Material S3
-/DetectorConstruction/Collimator2_Height 20.000000000
-/DetectorConstruction/update
-/gun/energy 30.000000 keV
-/analysis/setFileName hist_S3_H20_E30
-/run/beamOn 1000000

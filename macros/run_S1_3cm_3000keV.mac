@@ -1,0 +1,17 @@
+# Paper 10.1 Benchmark - S1 @ 3000 keV, th=3 cm
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/DetectorConstruction/Sample_Material S1
+/DetectorConstruction/Sample_Thickness 3.0000 cm
+/DetectorConstruction/update
+
+/gun/particle gamma
+/gun/energy 3000 keV
+/gun/position 0 0 0 cm
+/gun/direction 0 0 1
+
+/analysis/setFileName hist_S1_3cm_3000keV
+/run/beamOn 1000000

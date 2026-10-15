@@ -11,7 +11,7 @@ on:
       gdrive_folder:
         description: 'Google Drive Project Folder ID'
         required: true
-        default: '1LId-37VbNNFiQ1V2wjJE4uGyTYQxneqB'
+        default: '1ZvUozvCDo3itVIYcA0r-70CR92Ag8IRh'
         type: string
 
 jobs:

@@ -85,7 +85,7 @@ MyDetectorConstruction::MyDetectorConstruction()
 	fCollimator2_Height(0.0)
 {
 	fMessenger = new G4GenericMessenger(this, "/DetectorConstruction/", "Detector Construction Control");
-	fMessenger->DeclareProperty("Sample_Thickness", fSample_Thickness, "Set Sample_Thickness");
+	fMessenger->DeclarePropertyWithUnit("Sample_Thickness", "cm", fSample_Thickness, "Set Sample_Thickness");
 	fMessenger->DeclareProperty("Sample_Material", fSampleMaterial, "Set Sample material name (S0, S1, S2, ..., S8)");
 	fMessenger->DeclareProperty("Collimator2_Height", fCollimator2_Height, "Unused (retained for backward compatibility)");
 	fMessenger->DeclareMethod("update", &MyDetectorConstruction::UpdateGeometry, "Update geometry after parameter changes");

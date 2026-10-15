@@ -1,0 +1,17 @@
+# Paper 10.1 Benchmark - S0 (Blank) @ 400 keV
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/DetectorConstruction/Sample_Material S0
+/DetectorConstruction/Sample_Thickness 0.0050 cm
+/DetectorConstruction/update
+
+/gun/particle gamma
+/gun/energy 400 keV
+/gun/position 0 0 0 cm
+/gun/direction 0 0 1
+
+/analysis/setFileName hist_BLANK_0.005cm_400keV
+/run/beamOn 1000000

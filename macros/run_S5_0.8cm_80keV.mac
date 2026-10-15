@@ -1,0 +1,17 @@
+# Paper 10.1 Benchmark - S5 @ 80 keV, th=0.8 cm
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/DetectorConstruction/Sample_Material S5
+/DetectorConstruction/Sample_Thickness 0.8000 cm
+/DetectorConstruction/update
+
+/gun/particle gamma
+/gun/energy 80 keV
+/gun/position 0 0 0 cm
+/gun/direction 0 0 1
+
+/analysis/setFileName hist_S5_0.8cm_80keV
+/run/beamOn 1000000

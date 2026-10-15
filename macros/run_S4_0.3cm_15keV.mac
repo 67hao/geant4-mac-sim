@@ -1,0 +1,17 @@
+# Paper 10.1 Benchmark - S4 @ 15 keV, th=0.3 cm
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/DetectorConstruction/Sample_Material S4
+/DetectorConstruction/Sample_Thickness 0.3000 cm
+/DetectorConstruction/update
+
+/gun/particle gamma
+/gun/energy 15 keV
+/gun/position 0 0 0 cm
+/gun/direction 0 0 1
+
+/analysis/setFileName hist_S4_0.3cm_15keV
+/run/beamOn 1000000
