@@ -90,3 +90,15 @@ jobs:
             --github-user "${{ github.repository_owner }}" \
             --sim-bin "./build/Sim" \
             --timeout-hours 4.0
+
+      - name: Upload ROOT and CSV Artifacts (Safety Guarantee)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runner_${{ matrix.runner_id }}_outputs
+          path: |
+            *.root
+            *.csv
+            build/*.root
+            build/*.csv
+          retention-days: 14
