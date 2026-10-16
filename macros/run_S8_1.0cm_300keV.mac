@@ -1,0 +1,17 @@
+# Paper 10.1 Benchmark - S8 @ 300 keV, th=1.0 cm (10^8 primaries)
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/DetectorConstruction/Sample_Material S8
+/DetectorConstruction/Sample_Thickness 1.0000 cm
+/DetectorConstruction/update
+
+/gun/particle gamma
+/gun/energy 300 keV
+/gun/position 0 0 0 cm
+/gun/direction 0 0 1
+
+/analysis/setFileName hist_S8_1.0cm_300keV
+/run/beamOn 100000000

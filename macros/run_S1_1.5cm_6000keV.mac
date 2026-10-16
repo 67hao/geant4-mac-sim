@@ -1,4 +1,4 @@
-# Paper 10.1 Benchmark - S1 @ 6000 keV, th=1.5 cm
+# Paper 10.1 Benchmark - S1 @ 6000 keV, th=1.5 cm (10^8 primaries)
 /control/verbose 0
 /run/verbose 0
 /event/verbose 0
@@ -14,4 +14,4 @@
 /gun/direction 0 0 1
 
 /analysis/setFileName hist_S1_1.5cm_6000keV
-/run/beamOn 1000000
+/run/beamOn 100000000

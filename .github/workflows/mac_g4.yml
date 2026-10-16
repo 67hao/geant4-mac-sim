@@ -6,7 +6,7 @@ on:
       primaries:
         description: 'Số hạt mỗi job'
         required: true
-        default: '1000000'
+        default: '100000000'
         type: string
       gdrive_folder:
         description: 'Google Drive Project Folder ID'
@@ -18,7 +18,7 @@ jobs:
   run-geant4:
     name: Geant4 Runner #${{ matrix.runner_id }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 240
+    timeout-minutes: 360
     strategy:
       fail-fast: false
       matrix:
@@ -86,7 +86,7 @@ jobs:
             --num-runners 10 \
             --primaries ${{ github.event.inputs.primaries }} \
             --gdrive-folder "${{ github.event.inputs.gdrive_folder }}" \
-            --plan-file "mac_g4_plan_18acc.json" \
+            --plan-file "mac_g4_plan_14acc.json" \
             --github-user "${{ github.repository_owner }}" \
             --sim-bin "./build/Sim" \
             --timeout-hours 4.0

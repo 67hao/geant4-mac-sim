@@ -26,9 +26,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Geant4 Parallel Worker for MAC Simulation")
     parser.add_argument("--runner-id", type=int, required=True, help="ID runner (1..10)")
     parser.add_argument("--num-runners", type=int, default=10, help="Tong so runner tren account nay")
-    parser.add_argument("--primaries", type=int, default=1000000, help="So hat moi job")
+    parser.add_argument("--primaries", type=int, default=100000000, help="So hat moi job")
     parser.add_argument("--gdrive-folder", type=str, default="1ZvUozvCDo3itVIYcA0r-70CR92Ag8IRh")
-    parser.add_argument("--plan-file", type=str, default="mac_g4_plan_18acc.json")
+    parser.add_argument("--plan-file", type=str, default="mac_g4_plan_14acc.json")
     parser.add_argument("--github-user", type=str, default=None)
     parser.add_argument("--sim-bin", type=str, default=None)
     parser.add_argument("--timeout-hours", type=float, default=4.0)
@@ -93,6 +93,7 @@ def main():
     flux_folder_id = None
     outputs_folder_id = None
     existing_files = set()
+    existing_root_files = set()
 
     try:
         drive_service = gdrive_helper.get_drive_service()
@@ -105,7 +106,9 @@ def main():
         print(f"  • Raw Archive      (03_Simulation_Outputs): {outputs_folder_id}")
 
         existing_files = get_existing_drive_files(drive_service, flux_folder_id)
-        print(f">>> [DRIVE] Tim thay {len(existing_files)} files da ton tai trong Flat Common Pool.")
+        if outputs_folder_id:
+            existing_root_files = get_existing_drive_files(drive_service, outputs_folder_id)
+        print(f">>> [DRIVE] Tim thay {len(existing_files)} CSVs va {len(existing_root_files)} ROOT files tren Drive.")
     except Exception as e:
         print(f">>> [WARNING] Ket noi Drive that bai: {e}. Du lieu se duoc luu local.")
 
@@ -136,8 +139,9 @@ def main():
 
         # Check candidate filenames
         target_csv_name = f"{jname}.csv"
-        if target_csv_name.lower() in existing_files:
-            print(f"[{idx}/{total_jobs}] SKIP: [{jname}] da co trong Flat Common Pool tren Drive.")
+        target_root_name = f"hist_{jname}.root"
+        if target_csv_name.lower() in existing_files and target_root_name.lower() in existing_root_files:
+            print(f"[{idx}/{total_jobs}] SKIP: [{jname}] da co du ca ROOT va CSV tren Drive.")
             continue
 
         # Locate macro file

@@ -4,6 +4,8 @@
 
 #include "G4Event.hh"
 #include "G4HCofThisEvent.hh"
+#include "G4AnalysisManager.hh"
+#include "G4SystemOfUnits.hh"
 
 #include <cmath>
 
@@ -49,6 +51,27 @@ void MyEventAction::EndOfEventAction(const G4Event* event) {
 
             crossFluxEvent += hit->GetCrossingFlux();
             if (inWindow) crossFluxUncollidedEvent += hit->GetCrossingFlux();
+
+            // Fill ROOT analysis structures
+            auto* analysisManager = G4AnalysisManager::Instance();
+            analysisManager->FillH1(0, hit->GetKineticEnergy());
+            analysisManager->FillH1(1, hit->GetCosTheta());
+
+            // Ntuple: Event-by-event representative sample (max 25,000 entries per thread to prevent multi-GB file bloat)
+            static thread_local G4int s_ntupleRows = 0;
+            if (event->GetEventID() == 0) s_ntupleRows = 0;
+
+            if (s_ntupleRows < 25000) {
+                // Always record scattered photons. For uncollided photons, record first 100 hits or 1-in-1000
+                if (!inWindow || s_ntupleRows < 100 || (event->GetEventID() % 1000 == 0)) {
+                    analysisManager->FillNtupleDColumn(0, hit->GetKineticEnergy() / CLHEP::keV);
+                    analysisManager->FillNtupleDColumn(1, hit->GetCosTheta());
+                    analysisManager->FillNtupleDColumn(2, hit->GetWeight());
+                    analysisManager->FillNtupleIColumn(3, inWindow ? 1 : 0);
+                    analysisManager->AddNtupleRow();
+                    s_ntupleRows++;
+                }
+            }
         }
     }
 

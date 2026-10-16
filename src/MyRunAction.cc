@@ -78,13 +78,22 @@ MyRunAction::MyRunAction()
     accMan->RegisterAccumulable(fFluxCrossNaI);
     accMan->RegisterAccumulable(fFluxCrossUncollidedNaI);
 
-    // Van giu AnalysisManager de dat ten file .root theo material/thickness/energy
-    // (dung boi macro /analysis/setFileName), nhung khong tao H1/Ntuple nao nua
-    // vi khong con du lieu pulse/edep de fill.
     auto* analysisManager = G4AnalysisManager::Instance();
     analysisManager->SetVerboseLevel(1);
     analysisManager->SetNtupleMerging(true);
     analysisManager->SetDefaultFileType("root");
+
+    // Histograms
+    analysisManager->CreateH1("E_det", "Energy Spectrum of Photons at DetPlane", 1000, 0.0, 16.0 * CLHEP::MeV);
+    analysisManager->CreateH1("CosTheta", "Angular distribution cos(theta) at DetPlane", 100, 0.0, 1.0);
+
+    // Ntuple: Event-by-event transmitted photon hits
+    analysisManager->CreateNtuple("Photons", "Transmitted Photon Hits at DetPlane");
+    analysisManager->CreateNtupleDColumn("Ekin_keV");
+    analysisManager->CreateNtupleDColumn("CosTheta");
+    analysisManager->CreateNtupleDColumn("Weight");
+    analysisManager->CreateNtupleIColumn("IsUncollided");
+    analysisManager->FinishNtuple();
 }
 
 MyRunAction::~MyRunAction() = default;
