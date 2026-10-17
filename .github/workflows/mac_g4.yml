@@ -37,7 +37,7 @@ jobs:
 
           echo ">>> [INSTALL] Installing Geant4 via micromamba..."
           /tmp/micromamba create -y -p /tmp/g4_env -c conda-forge \
-            geant4 expat zlib freetype cmake make gxx_linux-64 \
+            geant4 root_base expat zlib freetype cmake make gxx_linux-64 \
             python=3.11 pandas numpy \
             google-api-python-client google-auth-httplib2 google-auth-oauthlib
 

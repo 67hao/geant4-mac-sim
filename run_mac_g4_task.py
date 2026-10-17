@@ -276,27 +276,29 @@ def main():
             Path(f"{jname}.root"),
             Path("build") / f"{jname}.root"
         ]
-        job_root_file = None
+        found_roots = []
         for rc in root_candidates:
-            if rc.exists():
-                job_root_file = rc
-                break
-        if not job_root_file:
-            for rf in list(Path.cwd().glob("*.root")) + list(Path("build").glob("*.root")):
-                if jname.lower() in rf.name.lower():
-                    job_root_file = rf
-                    break
+            if rc.exists() and rc not in found_roots:
+                found_roots.append(rc)
+        for rf in list(Path.cwd().glob("*.root")) + list(Path("build").glob("*.root")):
+            if (jname.lower() in rf.name.lower() or f"hist_{jname.lower()}" in rf.name.lower()) and rf not in found_roots:
+                found_roots.append(rf)
 
-        if job_root_file and drive_service and outputs_folder_id:
-            try:
-                gdrive_helper.upload_file_to_folder(drive_service, str(job_root_file), outputs_folder_id)
-                print(f"    ✅ Uploaded {job_root_file.name} -> 03_Simulation_Outputs (Direct Flat ROOT)")
+        if not found_roots:
+            print(f"    ⚠️ Warning: Khong tim thay file root cho {jname}! Danh sach root hien co: {[f.name for f in Path.cwd().glob('*.root')]}")
+
+        for job_root_file in found_roots:
+            if drive_service and outputs_folder_id:
                 try:
-                    job_root_file.unlink()
-                except Exception:
-                    pass
-            except Exception as e:
-                print(f"    ⚠️ Loi upload root file {job_root_file.name}: {e}")
+                    gdrive_helper.upload_file_to_folder(drive_service, str(job_root_file), outputs_folder_id)
+                    existing_root_files.add(job_root_file.name.lower())
+                    print(f"    ✅ Uploaded {job_root_file.name} -> 03_Simulation_Outputs (Direct Flat ROOT)")
+                    try:
+                        job_root_file.unlink()
+                    except Exception:
+                        pass
+                except Exception as e:
+                    print(f"    ⚠️ Loi upload root file {job_root_file.name}: {e}")
 
     print("\n" + "=" * 80)
     print(f"🎉 RUNNER #{args.runner_id} HOAN TAT MO PHONG!")

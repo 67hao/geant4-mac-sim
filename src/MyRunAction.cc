@@ -80,7 +80,6 @@ MyRunAction::MyRunAction()
 
     auto* analysisManager = G4AnalysisManager::Instance();
     analysisManager->SetVerboseLevel(1);
-    analysisManager->SetNtupleMerging(true);
     analysisManager->SetDefaultFileType("root");
 
     // Histograms
@@ -101,7 +100,6 @@ MyRunAction::~MyRunAction() = default;
 void MyRunAction::BeginOfRunAction(const G4Run*) {
     G4AccumulableManager::Instance()->Reset();
     auto* analysisManager = G4AnalysisManager::Instance();
-    analysisManager->Reset();
 
     auto detector = static_cast<const MyDetectorConstruction*>(
         G4RunManager::GetRunManager()->GetUserDetectorConstruction());
@@ -127,8 +125,8 @@ void MyRunAction::BeginOfRunAction(const G4Run*) {
     }
     else {
         char tag[128];
-        std::snprintf(tag, sizeof(tag), "_t%.2fmm_E%.1fkeV_output", thicknessMM, energyKeV);
-        analysisManager->OpenFile(matName + tag);
+        std::snprintf(tag, sizeof(tag), "hist_%s_t%.2fmm_E%.1fkeV", matName.c_str(), thicknessMM, energyKeV);
+        analysisManager->OpenFile(tag);
     }
 
     if (IsMaster()) {
