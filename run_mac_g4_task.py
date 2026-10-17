@@ -13,6 +13,7 @@ import json
 import re
 import subprocess
 from pathlib import Path
+import shutil
 import pandas as pd
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -283,6 +284,18 @@ def main():
         for rf in list(Path.cwd().glob("*.root")) + list(Path("build").glob("*.root")):
             if (jname.lower() in rf.name.lower() or f"hist_{jname.lower()}" in rf.name.lower()) and rf not in found_roots:
                 found_roots.append(rf)
+
+        if not found_roots:
+            # Check for any newly created root file during this simulation run
+            for rf in list(Path.cwd().glob("*.root")) + list(Path("build").glob("*.root")):
+                if rf.stat().st_mtime >= t0 - 2.0 and rf not in found_roots:
+                    target_adopted = Path(f"hist_{jname}.root")
+                    try:
+                        shutil.move(str(rf), str(target_adopted))
+                        found_roots.append(target_adopted)
+                        print(f"    🔄 Adopted newly generated root file {rf.name} -> {target_adopted.name}")
+                    except Exception:
+                        found_roots.append(rf)
 
         if not found_roots:
             print(f"    ⚠️ Warning: Khong tim thay file root cho {jname}! Danh sach root hien co: {[f.name for f in Path.cwd().glob('*.root')]}")

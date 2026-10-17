@@ -52,6 +52,17 @@ namespace {
     G4double GetGlobalCollimator2Height() {
         return g_collimator2Height.load(std::memory_order_relaxed);
     }
+
+    std::mutex g_fileNameMutex;
+    G4String g_masterFileName = "";
+    void SetGlobalFileName(const G4String& name) {
+        std::lock_guard<std::mutex> lock(g_fileNameMutex);
+        g_masterFileName = name;
+    }
+    G4String GetGlobalFileName() {
+        std::lock_guard<std::mutex> lock(g_fileNameMutex);
+        return g_masterFileName;
+    }
 }
 
 // =========================================================================
@@ -80,6 +91,7 @@ MyRunAction::MyRunAction()
 
     auto* analysisManager = G4AnalysisManager::Instance();
     analysisManager->SetVerboseLevel(1);
+    analysisManager->SetNtupleMerging(true);
     analysisManager->SetDefaultFileType("root");
 
     // Histograms
@@ -119,22 +131,30 @@ void MyRunAction::BeginOfRunAction(const G4Run*) {
     }
     G4double energyKeV = g_primaryEnergy.load(std::memory_order_relaxed) / keV;
 
-    G4String presetName = analysisManager->GetFileName();
-    if (!presetName.empty()) {
-        analysisManager->OpenFile();
-    }
-    else {
-        char tag[128];
-        std::snprintf(tag, sizeof(tag), "hist_%s_t%.2fmm_E%.1fkeV", matName.c_str(), thicknessMM, energyKeV);
-        analysisManager->OpenFile(tag);
-    }
-
     if (IsMaster()) {
+        G4String presetName = analysisManager->GetFileName();
+        if (presetName.empty()) {
+            char tag[128];
+            std::snprintf(tag, sizeof(tag), "hist_%s_t%.2fmm_E%.1fkeV", matName.c_str(), thicknessMM, energyKeV);
+            presetName = tag;
+        }
+        SetGlobalFileName(presetName);
+        analysisManager->OpenFile(presetName);
+
         fTimer.Start();
         std::time_t t = std::time(nullptr);
         char buf[64];
         std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&t));
         G4cout << "\n========== Run started: " << buf << " ==========" << G4endl;
+    }
+    else {
+        G4String fName = GetGlobalFileName();
+        if (!fName.empty()) {
+            analysisManager->SetFileName(fName);
+        }
+        analysisManager->OpenFile(fName);
+        // Pre-fill dummy hit with 0 weight to ensure analysis file is never empty even if zero hits
+        analysisManager->FillH1(0, 0.0, 0.0);
     }
 }
 
