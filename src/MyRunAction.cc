@@ -137,9 +137,8 @@ void MyRunAction::BeginOfRunAction(const G4Run*) {
             char tag[128];
             std::snprintf(tag, sizeof(tag), "hist_%s_t%.2fmm_E%.1fkeV", matName.c_str(), thicknessMM, energyKeV);
             presetName = tag;
+            analysisManager->SetFileName(presetName);
         }
-        SetGlobalFileName(presetName);
-        analysisManager->OpenFile(presetName);
 
         fTimer.Start();
         std::time_t t = std::time(nullptr);
@@ -147,15 +146,8 @@ void MyRunAction::BeginOfRunAction(const G4Run*) {
         std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&t));
         G4cout << "\n========== Run started: " << buf << " ==========" << G4endl;
     }
-    else {
-        G4String fName = GetGlobalFileName();
-        if (!fName.empty()) {
-            analysisManager->SetFileName(fName);
-        }
-        analysisManager->OpenFile(fName);
-        // Pre-fill dummy hit with 0 weight to ensure analysis file is never empty even if zero hits
-        analysisManager->FillH1(0, 0.0, 0.0);
-    }
+
+    analysisManager->OpenFile();
 }
 
 // =========================================================================
