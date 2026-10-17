@@ -28,7 +28,7 @@ def parse_args():
     parser.add_argument("--num-runners", type=int, default=10, help="Tong so runner tren account nay")
     parser.add_argument("--primaries", type=int, default=100000000, help="So hat moi job")
     parser.add_argument("--gdrive-folder", type=str, default="1ZvUozvCDo3itVIYcA0r-70CR92Ag8IRh")
-    parser.add_argument("--plan-file", type=str, default="mac_g4_plan_14acc.json")
+    parser.add_argument("--plan-file", type=str, default="mac_g4_plan_13acc.json")
     parser.add_argument("--github-user", type=str, default=None)
     parser.add_argument("--sim-bin", type=str, default=None)
     parser.add_argument("--timeout-hours", type=float, default=4.0)
