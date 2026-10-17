@@ -131,15 +131,17 @@ void MyRunAction::BeginOfRunAction(const G4Run*) {
     }
     G4double energyKeV = g_primaryEnergy.load(std::memory_order_relaxed) / keV;
 
-    if (IsMaster()) {
-        G4String presetName = analysisManager->GetFileName();
-        if (presetName.empty()) {
-            char tag[128];
-            std::snprintf(tag, sizeof(tag), "hist_%s_t%.2fmm_E%.1fkeV", matName.c_str(), thicknessMM, energyKeV);
-            presetName = tag;
-            analysisManager->SetFileName(presetName);
-        }
+    G4String presetName = analysisManager->GetFileName();
+    if (presetName.empty()) {
+        char tag[128];
+        std::snprintf(tag, sizeof(tag), "hist_%s_t%.2fmm_E%.1fkeV.root", matName.c_str(), thicknessMM, energyKeV);
+        presetName = tag;
+    } else if (presetName.length() < 5 || presetName.substr(presetName.length() - 5) != ".root") {
+        presetName += ".root";
+    }
+    analysisManager->SetFileName(presetName);
 
+    if (IsMaster()) {
         fTimer.Start();
         std::time_t t = std::time(nullptr);
         char buf[64];
